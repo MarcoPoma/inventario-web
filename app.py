@@ -370,20 +370,6 @@ def api_registrar_movimiento_masivo_v2():
 IMAGENES_DIR = os.path.join('static', 'imagenes')
 os.makedirs(IMAGENES_DIR, exist_ok=True)
 
-@app.route("/api/producto/imagen", methods=["POST"])
-@login_requerido
-@no_readonly
-def api_subir_imagen_producto():
-    if 'imagen' not in request.files:
-        return jsonify({"ok": False, "msg": "No se envió imagen"})
-    archivo = request.files['imagen']
-    codigo = request.form.get('codigo', '').strip().upper()
-    if not codigo or archivo.filename == '':
-        return jsonify({"ok": False, "msg": "Datos incompletos"})
-    ext = os.path.splitext(archivo.filename)[1].lower()  # .jpg, .png, .webp, etc.
-    ruta = os.path.join(IMAGENES_DIR, f"{codigo}{ext}")
-    archivo.save(ruta)
-    return jsonify({"ok": True, "msg": "Imagen guardada"})
 
 
 @app.route("/api/producto/imagen", methods=["POST"])

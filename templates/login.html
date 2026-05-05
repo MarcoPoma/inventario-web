@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario Pro — Acceso</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a3a5c 0%, #2E86AB 50%, #1a3a5c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+      top: -200px; left: -200px;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+      bottom: -100px; right: -100px;
+    }
+    .login-card {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      z-index: 1;
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .logo { text-align: center; margin-bottom: 36px; }
+    .logo-icon { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+    .logo h1 { color: white; font-size: 1.7rem; font-weight: 800; letter-spacing: 2px; }
+    .logo p { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-top: 6px; }
+    .form-group { margin-bottom: 22px; }
+    .form-group label {
+      display: block;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .input-wrapper { position: relative; }
+    .input-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem; opacity: 0.6;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: white;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.25s ease;
+    }
+    input::placeholder { color: rgba(255,255,255,0.3); }
+    input:focus {
+      outline: none;
+      border-color: #5DADE2;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 3px rgba(93,173,226,0.2);
+    }
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, #2E86AB, #5DADE2);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+      font-family: inherit;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(46,134,171,0.5);
+    }
+    .btn-login:active { transform: translateY(0); }
+    .error-msg {
+      background: rgba(220,53,69,0.15);
+      border: 1px solid rgba(220,53,69,0.4);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #ff8a8a;
+      font-size: 0.88rem;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    .usuarios-hint {
+      margin-top: 28px;
+      padding: 16px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .usuarios-hint p {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.75rem;
+      text-align: center;
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hint-row {
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.78rem;
+      padding: 3px 0;
+    }
+    .hint-user { color: #5DADE2; font-weight: 600; }
+    .footer-text {
+      text-align: center;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.25);
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="logo">
+      <span class="logo-icon">📦</span>
+      <h1>INVENTARIO PRO</h1>
+      <p>Sistema de Control de Inventario</p>
+    </div>
+
+    {% if error %}
+    <div class="error-msg">❌ {{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label>Usuario</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input type="text" name="usuario" placeholder="Ingresa tu usuario" required autofocus>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-login">Ingresar al Sistema →</button>
+    </form>
+
+    <div class="usuarios-hint">
+      <p>Usuarios de prueba</p>
+      <div class="hint-row"><span class="hint-user">admin</span><span>admin123</span><span>Administrador</span></div>
+      <div class="hint-row"><span class="hint-user">operador</span><span>oper123</span><span>Operador</span></div>
+      <div class="hint-row"><span class="hint-user">visitante</span><span>visit123</span><span>Solo lectura</span></div>
+    </div>
+
+    <p class="footer-text">© 2024 Inventario Pro · Acceso restringido</p>
+  </div>
+</body>
+</html>
